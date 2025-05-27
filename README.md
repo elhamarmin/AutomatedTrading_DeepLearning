@@ -4,27 +4,27 @@
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
-### 📈 Stock Trading
+### Stock Trading
 - **Data Aggregation**: Fetch 5‑minute interval data (∼4,000 rows) via Alpaca API or Yahoo Finance, forward‑fill missing values, and support multiple timeframes (5m, 30m, 1h, 2h, 4h) with a single parameter change.
 - **RL Strategies**: Train and compare PPO, AHAC, SAC, SHAC, and optional SVG agents.
 - **Real‑Time Execution**: Paper‑trade or live‑trade through Alpaca’s REST API.
 - **Backtesting & Analysis**: Custom callbacks, reward‑curve plotting, and asset‑growth visualization (e.g., 8% Q3 increase).
 - **Hyperparameter Tuning**: Integrated W&B sweeps for automated optimization.
 
-### 🤖 Robotics Simulation
+### Robotics Simulation
 - **Webots Integration**: Simulate robots performing navigation and obstacle avoidance.
 - **Sensor Suites**: GPS, LiDAR, compass, gyro streams feed into custom environments.
 - **Multi‑Agent Training**: Support for PPO and AHAC in Gym‑wrapped Webots environments.
 
-### 🛠️ Infrastructure & Configurations
+### Infrastructure & Configurations
 - **Hydra**: Modular configs for algorithms, environments, logging, and intervals.
 - **Version Control**: Git for codebase management and reproducibility.
 
 ---
 
-## 🧰 Tech Stack
+## Tech Stack
 | Component            | Tool / Library                        |
 |----------------------|---------------------------------------|
 | Language             | Python                                |
@@ -38,7 +38,7 @@
 
 ---
 
-## 🔧 Setup
+## Setup
 
 1. **Clone**
    ```bash
@@ -67,7 +67,7 @@ python setup.py install
 
 ---
 
-## 🎓 Usage
+## Usage
 
 ### Stock Trading
 1. **Data Download**
@@ -101,7 +101,7 @@ python src/train.py env=WebotsGymEnv alg=ppo
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 - **Algorithms**: `cfg/alg/ahac.yaml`, `cfg/alg/ppo.yaml`, …
 - **Environments**: `cfg/env/StockTradingEnv.yaml`, `cfg/env/WebotsEnv.yaml`
 - **Intervals**: Set `cfg.general.interval = [5m,30m,1h,2h,4h]`
@@ -109,7 +109,7 @@ python src/train.py env=WebotsGymEnv alg=ppo
 
 ---
 
-## 📊 Results
+## Results
 - **Asset Growth**: `results/assets_plot_<episode>.png`
 - **Reward Trends**: `results/reward_plot_<interval>.png`
 - **Logs**: `results/actions.csv`
