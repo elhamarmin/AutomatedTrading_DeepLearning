@@ -53,10 +53,10 @@ pip install alpaca‑py pywebots hydra‑core rl‑games stable‑baselines3 gym
 3. **Configure Alpaca**
    - Edit `src/AHACEnvWrapper.py`:
      ```python
-api_key = "YOUR_API_KEY"
-api_secret = "YOUR_SECRET"
-api_base_url = "https://paper-api.alpaca.markets/v2"
-```
+      api_key = "YOUR_API_KEY"
+      api_secret = "YOUR_SECRET"
+      api_base_url = "https://paper-api.alpaca.markets/v2"
+      ```
 4. **Install & Configure Webots** (for robotics)
    - Download from https://cyberbotics.com/.
    - Ensure `pywebots` is installed.
