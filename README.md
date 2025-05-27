@@ -1,66 +1,117 @@
-# Adaptive Horizon Actor Critic (AHAC)
+# DiFFRL: Stock Trading & Robotics Simulation with PPO and AHAC
 
-This repository contains the implementation for the paper [Adaptive Horizon Actor-Critic for Policy Learning in Contact-Rich Differentiable Simulation](https://adaptive-horizon-actor-critic.github.io/) (ICML 2024).
+**DiFFRL** combines cutting-edge reinforcement learning (RL) for **algorithmic stock trading** and **robotics simulation** under a unified framework. We leverage historical market data from Dow Jones 30 (with plans for NASDAQ‑100 filtering) and sensor-driven robotic environments to develop, train, and evaluate RL agents using Proximal Policy Optimization (PPO) and a custom Adaptive Hierarchical Actor-Critic (AHAC) algorithm.
 
-In this paper, we build on previous work in differentiable simulation policy optimization, to create Adaptive Horizon Actor Critic (AHAC). Our approach deals with gradient error arising from stiff contact by dynamically adapting its model-based horizon to fit one robot gait and avoid excessive contact. This results in a higher performant and easier to use algorithm than its predecessor [Short Horizon Actor Critic (SHAC)](https://short-horizon-actor-critic.github.io/) while also outperofming PPO by 40% across a set of high-dimensional locomotion tasks.
+---
 
-[![Watch the video](figures/envs.png)](https://adaptive-horizon-actor-critic.github.io/media/all_envs_trimmed.mp4)
+## 🚀 Key Features
 
-## Installation
+### 📈 Stock Trading
+- **Data Aggregation**: Fetch 5‑minute interval data (∼4,000 rows) via Alpaca API or Yahoo Finance, forward‑fill missing values, and support multiple timeframes (5m, 30m, 1h, 2h, 4h) with a single parameter change.
+- **RL Strategies**: Train and compare PPO, AHAC, SAC, SHAC, and optional SVG agents.
+- **Real‑Time Execution**: Paper‑trade or live‑trade through Alpaca’s REST API.
+- **Backtesting & Analysis**: Custom callbacks, reward‑curve plotting, and asset‑growth visualization (e.g., 8% Q3 increase).
+- **Hyperparameter Tuning**: Integrated W&B sweeps for automated optimization.
 
- `git clone https://github.com/imgeorgiev/DiffRL --recursive`
+### 🤖 Robotics Simulation
+- **Webots Integration**: Simulate robots performing navigation and obstacle avoidance.
+- **Sensor Suites**: GPS, LiDAR, compass, gyro streams feed into custom environments.
+- **Multi‑Agent Training**: Support for PPO and AHAC in Gym‑wrapped Webots environments.
 
+### 🛠️ Infrastructure & Configurations
+- **Hydra**: Modular configs for algorithms, environments, logging, and intervals.
+- **Version Control**: Git for codebase management and reproducibility.
 
-Setup this project with Anaconda
+---
+
+## 🧰 Tech Stack
+| Component            | Tool / Library                        |
+|----------------------|---------------------------------------|
+| Language             | Python                                |
+| RL Algos             | PPO, AHAC, SAC, SHAC, SVG             |
+| Data API             | Alpaca‑Py, YahooDownloader            |
+| Config               | Hydra                                 |
+| Experiment Logging   | Weights & Biases (wandb)              |
+| Simulation & RL      | Webots, FinRL, RL‑Games, SB3, Gymnasium|
+| Visualization        | Matplotlib                            |
+| Deployment & Scripts | bash, Python scripts                  |
+
+---
+
+## 🔧 Setup
+
+1. **Clone**
+   ```bash
+git clone <repo-url>
+cd <repo-name>
 ```
-conda env create -f environment.yml
-conda activate diffrl
-pip install -e dflex
-pip install -e .
+2. **Install Dependencies**
+   ```bash
+pip install -r requirements.txt
+pip install alpaca‑py pywebots hydra‑core rl‑games stable‑baselines3 gymnasium wandb
+```
+3. **Configure Alpaca**
+   - Edit `src/AHACEnvWrapper.py`:
+     ```python
+api_key = "YOUR_API_KEY"
+api_secret = "YOUR_SECRET"
+api_base_url = "https://paper-api.alpaca.markets/v2"
+```
+4. **Install & Configure Webots** (for robotics)
+   - Download from https://cyberbotics.com/.
+   - Ensure `pywebots` is installed.
+5. **Build**
+   ```bash
+python setup.py install
 ```
 
-For an unknown reason, you need to symlink cuda libraries for ninja to work:
+---
+
+## 🎓 Usage
+
+### Stock Trading
+1. **Data Download**
+   ```python
+from src.AHACEnvWrapper import alpaca_downloader
+
+df = alpaca_downloader(START_DATE, END_DATE, DOW_30_TICKER, interval="5m")
 ```
-ln -s $CONDA_PREFIX/lib $CONDA_PREFIX/lib64
+2. **Training**
+   ```bash
+python src/train.py env=StockTradingEnv alg=ahac
 ```
-
-If you want SVG as a baseline:
-
+3. **Backtesting & Visualization**
+   ```python
+from src.AHACEnvWrapper import plot_actions
+plot_actions("results/assets_plot_<episode>.png")
 ```
-pip install -e externals/svg
+4. **Hyperparameter Sweeps**
+   - Enable W&B in Hydra config: `cfg.general.run_wandb = true`
+
+### Robotics Simulation
+1. **Launch Webots** with the appropriate world file.
+2. **Train**
+   ```bash
+python src/train.py env=WebotsGymEnv alg=ppo
 ```
+3. **Alternate Scripts**
+   - `run_model = 0`: train
+   - `run_model = 1`: test
+   - `run_model = 2`: manual debug with LiDAR
 
-## Training
+---
 
-```
-python train.py alg=ahac env=ant
-```
+## ⚙️ Configuration
+- **Algorithms**: `cfg/alg/ahac.yaml`, `cfg/alg/ppo.yaml`, …
+- **Environments**: `cfg/env/StockTradingEnv.yaml`, `cfg/env/WebotsEnv.yaml`
+- **Intervals**: Set `cfg.general.interval = [5m,30m,1h,2h,4h]`
+- **State Vector**: 301‑dim for 5m data, scaled appropriately for other intervals.
 
-where you can change `alg` and `env` freely based in the provided hydra configurations.
+---
 
-The training script outputs tensorboard logs by default. If you want to use wandb, you can add the additional flag `general.run_wandb=True` and specify `wandb.project=<name>` `wnadb.entity=<entity>`.
+## 📊 Results
+- **Asset Growth**: `results/assets_plot_<episode>.png`
+- **Reward Trends**: `results/reward_plot_<interval>.png`
+- **Logs**: `results/actions.csv`
+- **Models**: `src/models/model_<run>_<timestamp>.zip`
 
-Note that dflex is not fully deterministic due to GPU acceleration and cannot reproduce the same results given then same seed.
-
-
-## Testing
-
-You can load a policy and evluate it without training. Works only for AHAC and SHAC algorithms.
-
-```
-python train.py alg=ahac env=ant train=False checkpoint=<policy_path>
-```
-
-You can also control the number of eval episodes with `env.player.games_num=10`.
-
-## Generating rendering files
-
-The `general.render` flag indicates whether to export the video of the task execution. If does, the exported video is encoded in `.usd` format, and stored in the `examples/output` folder. To visualize the exported `.usd` file, refer to [USD at NVIDIA](https://developer.nvidia.com/usd).
-
-```python
-python train.py alg=ahac env=ant general.train=False general.render=True general.checkpoint=<policy_path> env.config.stochastic_init=False env.player.games_num=1 env.player.num_actors=1 env.config.num_envs=1 alg.eval_runs=1
-```
-
-Once you have generated a rendering file you can load it in USD Composer to generate a image or video render like the one above. To install Omniverse, follow the [Omniverse Install Page](https://www.nvidia.com/en-us/omniverse/download/). Then install [USD Composer](https://www.nvidia.com/en-us/omniverse/apps/create/) from the Omniverse GUI. Start USD Composer and load the usd files generated by the script above.
-
- 
