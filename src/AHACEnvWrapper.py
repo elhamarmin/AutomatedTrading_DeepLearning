@@ -61,8 +61,8 @@ def data_filler(df_dirty: pd.DataFrame):
     return df_filled
 
 def alpaca_downloader(startdate, enddate,symbols, interval = "5m"):
-    api_key = "PKZDGL0P2GQCCAZ80SMA"
-    api_secret = "48UHdFtkPv9Ayf59kJd8scvnrpf8Rfja8nZ1pMsa"
+    api_key = "Your_Key"
+    api_secret = "Your_Secret"
 
     number = 5
     letter = "m"
