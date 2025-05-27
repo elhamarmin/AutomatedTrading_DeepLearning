@@ -1,0 +1,30 @@
+defaults:
+  - _self_
+  - env: cartpole  # Adjust based on your specific environment
+  - alg: shac  # Adjust based on the algorithm you're using
+
+exp_name: shac_benchmarks
+
+general:
+  train: True  # Training mode
+  logdir: logs
+  render: False
+  device: cpu
+  run_wandb: False
+  seed: 42
+  checkpoint:  # Add checkpointing if needed
+  multi_gpu: False  # Use single GPU
+  mixed_precision: False  # Disable mixed precision for stability
+  iterations: 20  # Reduce the number of iterations
+  num_episodes: 10  # Add this line for number of episodes
+
+env:
+  gamma: 0.99
+  player:
+    games_num: 12  # Number of games per iteration
+    num_actors: 4  # Number of parallel actors
+
+wandb:
+  project: shac
+  entity: dmanip-rss
+  group: ${exp_name}
