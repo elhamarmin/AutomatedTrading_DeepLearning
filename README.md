@@ -1,5 +1,5 @@
 
-# DiFFRL: Stock Trading & Robotics Simulation with PPO & AHAC
+# Stock Trading & Robotics Simulation with DeepLearning
 
 **DiFFRL** is a unified framework for **reinforcement learning** in both **algorithmic stock trading** and **robotics simulation**. It combines historical market data (e.g., Dow Jones 30) and sensor-based robotic environments to train and evaluate agents using **Proximal Policy Optimization (PPO)** and a custom **Adaptive Hierarchical Actor-Critic (AHAC)** algorithm.
 
