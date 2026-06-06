@@ -27,9 +27,6 @@
 - **Webots Integration**  
   Simulate robotic tasks such as navigation and obstacle avoidance.
 
-- **Sensor Input**  
-  Use GPS, LiDAR, compass, and gyroscope data streams in custom Gym environments.
-
 - **Multi-Agent Training**  
   Train agents using PPO and AHAC in Webots-Gym wrapped environments.
 
